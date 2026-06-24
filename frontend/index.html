@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Transaction Ranking System</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <header class="hero">
+      <div class="container">
+        <p class="eyebrow">Live Demo</p>
+        <h1>Transaction Ranking System</h1>
+        <p class="subtitle">
+          Submit point transactions, inspect user summaries, and watch the fair multi-factor leaderboard update in real time.
+        </p>
+      </div>
+    </header>
+
+    <main class="container grid">
+      <section class="card">
+        <h2>Submit Transaction</h2>
+        <p class="hint">Each request uses an idempotency key to prevent duplicate processing on retries.</p>
+        <form id="transaction-form">
+          <label>
+            User ID
+            <input id="user-id" name="userId" type="text" placeholder="alice" required minlength="3" maxlength="64" pattern="[A-Za-z0-9_-]+" />
+          </label>
+          <label>
+            Amount (1–10,000)
+            <input id="amount" name="amount" type="number" min="1" max="10000" value="100" required />
+          </label>
+          <label>
+            Idempotency Key
+            <div class="inline-field">
+              <input id="idempotency-key" name="idempotencyKey" type="text" readonly required />
+              <button type="button" id="regenerate-key" class="secondary">New Key</button>
+            </div>
+          </label>
+          <button type="submit">Submit Transaction</button>
+        </form>
+        <div id="transaction-result" class="result" hidden></div>
+      </section>
+
+      <section class="card">
+        <h2>User Summary</h2>
+        <form id="summary-form">
+          <label>
+            User ID
+            <input id="summary-user-id" name="userId" type="text" placeholder="alice" required minlength="3" maxlength="64" pattern="[A-Za-z0-9_-]+" />
+          </label>
+          <button type="submit">Get Summary</button>
+        </form>
+        <div id="summary-result" class="result" hidden></div>
+      </section>
+
+      <section class="card full-width">
+        <div class="card-header">
+          <h2>Live Leaderboard</h2>
+          <span id="ranking-status" class="status">Loading...</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>User</th>
+                <th>Total Points</th>
+                <th>Transactions</th>
+                <th>Avg Amount</th>
+                <th>Score</th>
+              </tr>
+            </thead>
+            <tbody id="ranking-body">
+              <tr><td colspan="6" class="empty">Loading...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <footer class="container footer">
+      <p>Ranking uses total points, average transaction size, and earliest activity as tie-breakers.</p>
+    </footer>
+
+    <script src="js/config.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
