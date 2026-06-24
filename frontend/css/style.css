@@ -49,10 +49,40 @@ h1 {
 }
 
 .subtitle {
-  margin: 0;
+  margin: 0 0 1.25rem;
   color: var(--muted);
   max-width: 60ch;
   line-height: 1.6;
+}
+
+.demo-btn {
+  margin-top: 0.25rem;
+}
+
+.demo-status {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  white-space: pre-line;
+  max-width: 60ch;
+}
+
+.demo-status.running {
+  background: rgba(91, 156, 255, 0.12);
+  border: 1px solid rgba(91, 156, 255, 0.35);
+  color: var(--text);
+}
+
+.demo-status.success {
+  background: rgba(62, 207, 142, 0.12);
+  border: 1px solid rgba(62, 207, 142, 0.35);
+}
+
+.demo-status.error {
+  background: rgba(255, 107, 107, 0.12);
+  border: 1px solid rgba(255, 107, 107, 0.35);
 }
 
 .grid {
