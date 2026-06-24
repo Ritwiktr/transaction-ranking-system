@@ -220,6 +220,14 @@ This protects against network retries and accidental double-submits.
 
 Open http://localhost:8000
 
+**One-click demo (frontend):**
+
+On the live site, click **Run Demo Scenarios** to automatically:
+
+1. Submit transactions for `quality-demo` (2 × 100 pts) and `spam-demo` (10 × 10 pts)
+2. Verify duplicate idempotency handling on `dup-demo`
+3. Refresh the leaderboard and show that `quality-demo` outranks `spam-demo` at the same total points
+
 **Render deployment:**
 
 1. Push this repo to GitHub.
