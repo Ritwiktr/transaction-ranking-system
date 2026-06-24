@@ -21,7 +21,6 @@ services:
     name: txn-ranking-ui
     runtime: static
     plan: free
-    region: oregon
     rootDir: frontend
     buildCommand: |
       if [ -n "$API_BASE_URL" ]; then
