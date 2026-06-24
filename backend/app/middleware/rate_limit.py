@@ -29,3 +29,8 @@ class RateLimiter:
 
 
 rate_limiter = RateLimiter(max_requests=settings.rate_limit_per_minute)
+
+
+def reset_rate_limiter() -> None:
+    with rate_limiter._lock:
+        rate_limiter._requests.clear()

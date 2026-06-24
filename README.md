@@ -154,7 +154,24 @@ Display score (informational):
 rankingScore = totalPoints + (averageTransactionAmount × 0.1)
 ```
 
-Sorting uses the three factors directly, not just the scalar score.
+Sorting uses the three factors directly via a SQL `ROW_NUMBER()` window function, not just the scalar score.
+
+### Ranking fairness example
+
+Two users each earn **200 total points**:
+
+| User | Transactions | Avg amount | Rank |
+|------|--------------|------------|------|
+| `quality` | 2 × 100 pts | 100.0 | **#1** |
+| `spammer` | 20 × 10 pts | 10.0 | **#2** |
+
+Same total points, but the user with meaningful transaction sizes ranks higher. Micro-transaction spam does not beat fewer, larger legitimate transactions.
+
+Run the automated fairness test:
+
+```bash
+cd backend && pytest tests/test_ranking.py::test_quality_user_ranks_above_spammer_with_same_total_points -v
+```
 
 ## Duplicate Request Prevention
 
@@ -162,6 +179,8 @@ Sorting uses the three factors directly, not just the scalar score.
 2. Server enforces a **unique constraint** on `idempotency_key`.
 3. On insert conflict, the existing transaction is fetched and returned with `"duplicate": true` and HTTP `200`.
 4. User balances are **not** incremented again.
+
+If the same `idempotencyKey` is reused with a **different** payload (different `userId` or `amount`), the server still returns the **original** transaction. This is standard idempotency behavior — the key identifies the intent, not a new request.
 
 This protects against network retries and accidental double-submits.
 
@@ -188,6 +207,11 @@ This protects against network retries and accidental double-submits.
 
 ## Live Demo
 
+- **Frontend:** https://txn-ranking-ui.onrender.com
+- **API:** https://txn-ranking-api.onrender.com
+- **API docs:** https://txn-ranking-api.onrender.com/docs
+- **Repo:** https://github.com/Ritwiktr/transaction-ranking-system
+
 **Local (API + frontend together):**
 
 ```bash
@@ -205,10 +229,20 @@ Open http://localhost:8000
 
 The API also serves the frontend at `/` when run as a single service (useful for simpler deployments).
 
+## Run Tests
+
+```bash
+cd backend
+source .venv/bin/activate
+pip install -r requirements.txt
+pytest -v
+```
+
+Tests cover idempotent duplicates, concurrent updates, validation errors, rate limiting, and ranking fairness.
+
 > **Note:** Render deployment requires an active billing plan on your Render workspace and a connected GitHub repository. If services are suspended, reactivate billing in the Render dashboard first.
 
 ## Known Limitations
 
 - No authentication or authorization.
 - Rate limiting is in-memory and resets when the API process restarts.
-- Ranking is computed in application memory on read (fine for demo scale).
